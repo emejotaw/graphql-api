@@ -9,6 +9,7 @@ import (
 	"fmt"
 
 	"github.com/emejotaw/graphql-api/graph/model"
+	"github.com/emejotaw/graphql-api/internal/service"
 )
 
 // CreateOrder is the resolver for the createOrder field.
@@ -18,7 +19,20 @@ func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrder
 
 // CraeteProduct is the resolver for the craeteProduct field.
 func (r *mutationResolver) CraeteProduct(ctx context.Context, input model.NewProduct) (*model.Product, error) {
-	panic(fmt.Errorf("not implemented: CraeteProduct - craeteProduct"))
+
+	productService := service.NewProductService(r.db)
+	product, err := productService.Create(input.Name, input.Quantity, input.Price)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &model.Product{
+		ID:       product.ID,
+		Name:     &product.Name,
+		Quantity: product.Quantity,
+		Price:    product.Price,
+	}, nil
 }
 
 // Orders is the resolver for the orders field.

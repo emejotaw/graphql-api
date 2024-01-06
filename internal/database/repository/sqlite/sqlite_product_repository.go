@@ -9,6 +9,12 @@ type SqliteProductRepository struct {
 	db *gorm.DB
 }
 
+func NewSqliteProductRepository(db *gorm.DB) *SqliteProductRepository {
+	return &SqliteProductRepository{
+		db: db,
+	}
+}
+
 func (r *SqliteProductRepository) Create(product *entity.Product) error {
 
 	return r.db.Create(product).Error

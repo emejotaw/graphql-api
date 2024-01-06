@@ -9,6 +9,13 @@ type SqliteOrderRepository struct {
 	db *gorm.DB
 }
 
+func NewSqliteOrderRepository(db *gorm.DB) *SqliteOrderRepository {
+
+	return &SqliteOrderRepository{
+		db: db,
+	}
+}
+
 func (r *SqliteOrderRepository) Create(order *entity.Order) error {
 	return r.db.Create(order).Error
 }
