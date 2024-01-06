@@ -1,17 +1,27 @@
 package graph
 
-import "gorm.io/gorm"
+import (
+	"github.com/emejotaw/graphql-api/internal/service"
+)
 
 // This file will not be regenerated automatically.
 //
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	db *gorm.DB
+	productService      *service.ProductService
+	orderService        *service.OrderService
+	orderProductService *service.OrderProductService
 }
 
-func NewResolver(db *gorm.DB) *Resolver {
+func NewResolver(
+	productService *service.ProductService,
+	orderService *service.OrderService,
+	orderProductService *service.OrderProductService,
+) *Resolver {
 	return &Resolver{
-		db: db,
+		productService:      productService,
+		orderService:        orderService,
+		orderProductService: orderProductService,
 	}
 }

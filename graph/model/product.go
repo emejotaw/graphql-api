@@ -5,5 +5,4 @@ type Product struct {
 	Name     *string `json:"name,omitempty"`
 	Quantity int     `json:"quantity"`
 	Price    float64 `json:"price"`
-	Order    *Order  `json:"order"`
 }

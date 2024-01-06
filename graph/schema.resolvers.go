@@ -8,13 +8,12 @@ import (
 	"context"
 
 	"github.com/emejotaw/graphql-api/graph/model"
-	"github.com/emejotaw/graphql-api/internal/service"
 )
 
 // CreateOrder is the resolver for the createOrder field.
 func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrder) (*model.Order, error) {
-	orderService := service.NewOrderService(r.db)
-	order, err := orderService.Create(input)
+
+	order, err := r.orderService.Create(input)
 
 	if err != nil {
 		return nil, err
@@ -28,8 +27,8 @@ func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrder
 
 // CraeteProduct is the resolver for the craeteProduct field.
 func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewProduct) (*model.Product, error) {
-	productService := service.NewProductService(r.db)
-	product, err := productService.Create(input.Name, input.Quantity, input.Price)
+
+	product, err := r.productService.Create(input.Name, input.Quantity, input.Price)
 
 	if err != nil {
 		return nil, err
@@ -46,8 +45,7 @@ func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewPro
 // Products is the resolver for the products field.
 func (r *orderResolver) Products(ctx context.Context, obj *model.Order) ([]*model.Product, error) {
 
-	orderProductService := service.NewOrderProductService(r.db)
-	products, err := orderProductService.FindByOrderId(obj.ID)
+	products, err := r.orderProductService.FindByOrderId(obj.ID)
 
 	if err != nil {
 		return nil, err
@@ -70,8 +68,7 @@ func (r *orderResolver) Products(ctx context.Context, obj *model.Order) ([]*mode
 // Orders is the resolver for the orders field.
 func (r *queryResolver) Orders(ctx context.Context) ([]*model.Order, error) {
 
-	orderService := service.NewOrderService(r.db)
-	orders, err := orderService.FindAll()
+	orders, err := r.orderService.FindAll()
 
 	if err != nil {
 		return nil, err
@@ -90,8 +87,8 @@ func (r *queryResolver) Orders(ctx context.Context) ([]*model.Order, error) {
 
 // Products is the resolver for the products field.
 func (r *queryResolver) Products(ctx context.Context) ([]*model.Product, error) {
-	productService := service.NewProductService(r.db)
-	products, err := productService.FindAll()
+
+	products, err := r.productService.FindAll()
 
 	if err != nil {
 		return nil, err

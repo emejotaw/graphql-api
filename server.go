@@ -9,6 +9,7 @@ import (
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/emejotaw/graphql-api/config"
 	"github.com/emejotaw/graphql-api/graph"
+	"github.com/emejotaw/graphql-api/internal/service"
 )
 
 const defaultPort = "8080"
@@ -20,7 +21,10 @@ func main() {
 	}
 
 	db := config.NewDatabase()
-	resolver := graph.NewResolver(db)
+	productService := service.NewProductService(db)
+	orderService := service.NewOrderService(db)
+	orderProductService := service.NewOrderProductService(db)
+	resolver := graph.NewResolver(productService, orderService, orderProductService)
 	srv := handler.NewDefaultServer(graph.NewExecutableSchema(graph.Config{Resolvers: resolver}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
