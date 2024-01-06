@@ -31,7 +31,7 @@ func (s *ProductService) FindByID(productId string) (*entity.Product, error) {
 	return s.repository.FindByID(productId)
 }
 
-func (s *ProductService) FindAll() ([]entity.Product, error) {
+func (s *ProductService) FindAll() (*[]entity.Product, error) {
 
 	return s.repository.FindAll()
 }

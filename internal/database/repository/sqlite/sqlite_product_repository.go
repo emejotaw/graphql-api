@@ -27,9 +27,9 @@ func (r *SqliteProductRepository) FindByID(productId string) (*entity.Product, e
 	return product, err
 }
 
-func (r *SqliteProductRepository) FindAll() ([]entity.Product, error) {
+func (r *SqliteProductRepository) FindAll() (*[]entity.Product, error) {
 
-	products := []entity.Product{}
+	products := &[]entity.Product{}
 	err := r.db.Find(products).Error
 
 	return products, err

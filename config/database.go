@@ -25,5 +25,9 @@ func NewDatabase() *gorm.DB {
 }
 
 func autoMigrate(db *gorm.DB) error {
-	return db.AutoMigrate(&entity.Order{}, &entity.Product{})
+	return db.AutoMigrate(
+		&entity.Order{},
+		&entity.Product{},
+		&entity.OrderProduct{},
+	)
 }

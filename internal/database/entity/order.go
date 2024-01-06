@@ -1,15 +1,7 @@
 package entity
 
-type Address struct {
-	State        string
-	City         string
-	Neighborhood string
-	Street       string
-	Number       string
-	ZipCode      string
-}
-
 type Order struct {
+	ID         string
 	TotalPrice float64
-	Address    Address
+	Products   []*OrderProduct
 }

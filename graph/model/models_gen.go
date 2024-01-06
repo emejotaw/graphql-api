@@ -24,9 +24,9 @@ type Mutation struct {
 }
 
 type NewOrder struct {
-	TotalPrice float64       `json:"totalPrice"`
-	ProductIds []int         `json:"productIds"`
-	Address    *AddressInput `json:"address,omitempty"`
+	TotalPrice float64         `json:"totalPrice"`
+	Products   []*ProductInput `json:"products"`
+	Address    *AddressInput   `json:"address,omitempty"`
 }
 
 type NewProduct struct {
@@ -44,6 +44,12 @@ type Order struct {
 type Product struct {
 	ID       string  `json:"id"`
 	Name     *string `json:"name,omitempty"`
+	Quantity int     `json:"quantity"`
+	Price    float64 `json:"price"`
+}
+
+type ProductInput struct {
+	Name     string  `json:"name"`
 	Quantity int     `json:"quantity"`
 	Price    float64 `json:"price"`
 }

@@ -36,8 +36,14 @@ input AddressInput {
 
 input NewOrder {
   totalPrice: Float!
-  productIds: [Int!]!
+  products: [ProductInput!]!
   address: AddressInput
+}
+
+input ProductInput {
+  name: String!
+  quantity: Int!
+  price: Float!
 }
 
 input NewProduct {
@@ -48,5 +54,5 @@ input NewProduct {
 
 type Mutation {
   createOrder(input: NewOrder!): Order!
-  craeteProduct(input: NewProduct!): Product!
+  createProduct(input: NewProduct!): Product!
 }

@@ -57,8 +57,8 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		CraeteProduct func(childComplexity int, input model.NewProduct) int
 		CreateOrder   func(childComplexity int, input model.NewOrder) int
+		CreateProduct func(childComplexity int, input model.NewProduct) int
 	}
 
 	Order struct {
@@ -82,7 +82,7 @@ type ComplexityRoot struct {
 
 type MutationResolver interface {
 	CreateOrder(ctx context.Context, input model.NewOrder) (*model.Order, error)
-	CraeteProduct(ctx context.Context, input model.NewProduct) (*model.Product, error)
+	CreateProduct(ctx context.Context, input model.NewProduct) (*model.Product, error)
 }
 type QueryResolver interface {
 	Orders(ctx context.Context) ([]*model.Order, error)
@@ -150,18 +150,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Address.ZipCode(childComplexity), true
 
-	case "Mutation.craeteProduct":
-		if e.complexity.Mutation.CraeteProduct == nil {
-			break
-		}
-
-		args, err := ec.field_Mutation_craeteProduct_args(context.TODO(), rawArgs)
-		if err != nil {
-			return 0, false
-		}
-
-		return e.complexity.Mutation.CraeteProduct(childComplexity, args["input"].(model.NewProduct)), true
-
 	case "Mutation.createOrder":
 		if e.complexity.Mutation.CreateOrder == nil {
 			break
@@ -173,6 +161,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.CreateOrder(childComplexity, args["input"].(model.NewOrder)), true
+
+	case "Mutation.createProduct":
+		if e.complexity.Mutation.CreateProduct == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createProduct_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateProduct(childComplexity, args["input"].(model.NewProduct)), true
 
 	case "Order.id":
 		if e.complexity.Order.ID == nil {
@@ -248,6 +248,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputAddressInput,
 		ec.unmarshalInputNewOrder,
 		ec.unmarshalInputNewProduct,
+		ec.unmarshalInputProductInput,
 	)
 	first := true
 
@@ -364,13 +365,13 @@ var parsedSchema = gqlparser.MustLoadSchema(sources...)
 
 // region    ***************************** args.gotpl *****************************
 
-func (ec *executionContext) field_Mutation_craeteProduct_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_createOrder_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.NewProduct
+	var arg0 model.NewOrder
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNNewProduct2githubᚗcomᚋemejotawᚋgraphqlᚑapiᚋgraphᚋmodelᚐNewProduct(ctx, tmp)
+		arg0, err = ec.unmarshalNNewOrder2githubᚗcomᚋemejotawᚋgraphqlᚑapiᚋgraphᚋmodelᚐNewOrder(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -379,13 +380,13 @@ func (ec *executionContext) field_Mutation_craeteProduct_args(ctx context.Contex
 	return args, nil
 }
 
-func (ec *executionContext) field_Mutation_createOrder_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+func (ec *executionContext) field_Mutation_createProduct_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.NewOrder
+	var arg0 model.NewProduct
 	if tmp, ok := rawArgs["input"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("input"))
-		arg0, err = ec.unmarshalNNewOrder2githubᚗcomᚋemejotawᚋgraphqlᚑapiᚋgraphᚋmodelᚐNewOrder(ctx, tmp)
+		arg0, err = ec.unmarshalNNewProduct2githubᚗcomᚋemejotawᚋgraphqlᚑapiᚋgraphᚋmodelᚐNewProduct(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -774,8 +775,8 @@ func (ec *executionContext) fieldContext_Mutation_createOrder(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _Mutation_craeteProduct(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Mutation_craeteProduct(ctx, field)
+func (ec *executionContext) _Mutation_createProduct(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createProduct(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -788,7 +789,7 @@ func (ec *executionContext) _Mutation_craeteProduct(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Mutation().CraeteProduct(rctx, fc.Args["input"].(model.NewProduct))
+		return ec.resolvers.Mutation().CreateProduct(rctx, fc.Args["input"].(model.NewProduct))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -805,7 +806,7 @@ func (ec *executionContext) _Mutation_craeteProduct(ctx context.Context, field g
 	return ec.marshalNProduct2ᚖgithubᚗcomᚋemejotawᚋgraphqlᚑapiᚋgraphᚋmodelᚐProduct(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Mutation_craeteProduct(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Mutation_createProduct(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Mutation",
 		Field:      field,
@@ -832,7 +833,7 @@ func (ec *executionContext) fieldContext_Mutation_craeteProduct(ctx context.Cont
 		}
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
-	if fc.Args, err = ec.field_Mutation_craeteProduct_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+	if fc.Args, err = ec.field_Mutation_createProduct_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -3231,7 +3232,7 @@ func (ec *executionContext) unmarshalInputNewOrder(ctx context.Context, obj inte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"totalPrice", "productIds", "address"}
+	fieldsInOrder := [...]string{"totalPrice", "products", "address"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -3245,13 +3246,13 @@ func (ec *executionContext) unmarshalInputNewOrder(ctx context.Context, obj inte
 				return it, err
 			}
 			it.TotalPrice = data
-		case "productIds":
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("productIds"))
-			data, err := ec.unmarshalNInt2ᚕintᚄ(ctx, v)
+		case "products":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("products"))
+			data, err := ec.unmarshalNProductInput2ᚕᚖgithubᚗcomᚋemejotawᚋgraphqlᚑapiᚋgraphᚋmodelᚐProductInputᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
-			it.ProductIds = data
+			it.Products = data
 		case "address":
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("address"))
 			data, err := ec.unmarshalOAddressInput2ᚖgithubᚗcomᚋemejotawᚋgraphqlᚑapiᚋgraphᚋmodelᚐAddressInput(ctx, v)
@@ -3267,6 +3268,47 @@ func (ec *executionContext) unmarshalInputNewOrder(ctx context.Context, obj inte
 
 func (ec *executionContext) unmarshalInputNewProduct(ctx context.Context, obj interface{}) (model.NewProduct, error) {
 	var it model.NewProduct
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"name", "quantity", "price"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "name":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			data, err := ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Name = data
+		case "quantity":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("quantity"))
+			data, err := ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Quantity = data
+		case "price":
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("price"))
+			data, err := ec.unmarshalNFloat2float64(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Price = data
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputProductInput(ctx context.Context, obj interface{}) (model.ProductInput, error) {
+	var it model.ProductInput
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -3404,9 +3446,9 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "craeteProduct":
+		case "createProduct":
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
-				return ec._Mutation_craeteProduct(ctx, field)
+				return ec._Mutation_createProduct(ctx, field)
 			})
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
@@ -4014,38 +4056,6 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 	return res
 }
 
-func (ec *executionContext) unmarshalNInt2ᚕintᚄ(ctx context.Context, v interface{}) ([]int, error) {
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]int, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNInt2int(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalNInt2ᚕintᚄ(ctx context.Context, sel ast.SelectionSet, v []int) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	for i := range v {
-		ret[i] = ec.marshalNInt2int(ctx, sel, v[i])
-	}
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
 func (ec *executionContext) unmarshalNNewOrder2githubᚗcomᚋemejotawᚋgraphqlᚑapiᚋgraphᚋmodelᚐNewOrder(ctx context.Context, v interface{}) (model.NewOrder, error) {
 	res, err := ec.unmarshalInputNewOrder(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -4170,6 +4180,28 @@ func (ec *executionContext) marshalNProduct2ᚖgithubᚗcomᚋemejotawᚋgraphql
 		return graphql.Null
 	}
 	return ec._Product(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNProductInput2ᚕᚖgithubᚗcomᚋemejotawᚋgraphqlᚑapiᚋgraphᚋmodelᚐProductInputᚄ(ctx context.Context, v interface{}) ([]*model.ProductInput, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]*model.ProductInput, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNProductInput2ᚖgithubᚗcomᚋemejotawᚋgraphqlᚑapiᚋgraphᚋmodelᚐProductInput(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) unmarshalNProductInput2ᚖgithubᚗcomᚋemejotawᚋgraphqlᚑapiᚋgraphᚋmodelᚐProductInput(ctx context.Context, v interface{}) (*model.ProductInput, error) {
+	res, err := ec.unmarshalInputProductInput(ctx, v)
+	return &res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNString2string(ctx context.Context, v interface{}) (string, error) {

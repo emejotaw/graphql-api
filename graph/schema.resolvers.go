@@ -14,12 +14,35 @@ import (
 
 // CreateOrder is the resolver for the createOrder field.
 func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrder) (*model.Order, error) {
-	panic(fmt.Errorf("not implemented: CreateOrder - createOrder"))
+
+	orderService := service.NewOrderService(r.db)
+	order, err := orderService.Create(input)
+
+	if err != nil {
+		return nil, err
+	}
+
+	products := []*model.Product{}
+	for _, p := range order.Products {
+
+		productName := p.Name
+		products = append(products, &model.Product{
+			ID:       p.ID,
+			Name:     &productName,
+			Quantity: p.Quantity,
+			Price:    p.Price,
+		})
+	}
+
+	return &model.Order{
+		ID:         order.ID,
+		TotalPrice: order.TotalPrice,
+		Products:   products,
+	}, nil
 }
 
 // CraeteProduct is the resolver for the craeteProduct field.
-func (r *mutationResolver) CraeteProduct(ctx context.Context, input model.NewProduct) (*model.Product, error) {
-
+func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewProduct) (*model.Product, error) {
 	productService := service.NewProductService(r.db)
 	product, err := productService.Create(input.Name, input.Quantity, input.Price)
 
@@ -42,7 +65,27 @@ func (r *queryResolver) Orders(ctx context.Context) ([]*model.Order, error) {
 
 // Products is the resolver for the products field.
 func (r *queryResolver) Products(ctx context.Context) ([]*model.Product, error) {
-	panic(fmt.Errorf("not implemented: Products - products"))
+	productService := service.NewProductService(r.db)
+	products, err := productService.FindAll()
+
+	if err != nil {
+		return nil, err
+	}
+
+	productsRespose := []*model.Product{}
+	for _, product := range *products {
+
+		name := product.Name
+
+		productsRespose = append(productsRespose, &model.Product{
+			ID:       product.ID,
+			Name:     &name,
+			Quantity: product.Quantity,
+			Price:    product.Price,
+		})
+	}
+
+	return productsRespose, nil
 }
 
 // Mutation returns MutationResolver implementation.
