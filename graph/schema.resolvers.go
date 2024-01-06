@@ -11,14 +11,24 @@ import (
 	"github.com/emejotaw/graphql-api/graph/model"
 )
 
-// CreateTodo is the resolver for the createTodo field.
-func (r *mutationResolver) CreateTodo(ctx context.Context, input model.NewTodo) (*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: CreateTodo - createTodo"))
+// CreateOrder is the resolver for the createOrder field.
+func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrder) (*model.Order, error) {
+	panic(fmt.Errorf("not implemented: CreateOrder - createOrder"))
 }
 
-// Todos is the resolver for the todos field.
-func (r *queryResolver) Todos(ctx context.Context) ([]*model.Todo, error) {
-	panic(fmt.Errorf("not implemented: Todos - todos"))
+// CraeteProduct is the resolver for the craeteProduct field.
+func (r *mutationResolver) CraeteProduct(ctx context.Context, input model.NewProduct) (*model.Product, error) {
+	panic(fmt.Errorf("not implemented: CraeteProduct - craeteProduct"))
+}
+
+// Orders is the resolver for the orders field.
+func (r *queryResolver) Orders(ctx context.Context) ([]*model.Order, error) {
+	panic(fmt.Errorf("not implemented: Orders - orders"))
+}
+
+// Products is the resolver for the products field.
+func (r *queryResolver) Products(ctx context.Context) ([]*model.Product, error) {
+	panic(fmt.Errorf("not implemented: Products - products"))
 }
 
 // Mutation returns MutationResolver implementation.
