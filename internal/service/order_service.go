@@ -40,3 +40,8 @@ func (s *OrderService) Create(orderInput model.NewOrder) (*entity.Order, error) 
 	err := s.repository.Create(order)
 	return order, err
 }
+
+func (s *OrderService) FindAll() ([]entity.Order, error) {
+
+	return s.repository.FindAll()
+}

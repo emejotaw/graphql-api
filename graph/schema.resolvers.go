@@ -6,7 +6,6 @@ package graph
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/emejotaw/graphql-api/graph/model"
 	"github.com/emejotaw/graphql-api/internal/service"
@@ -14,7 +13,6 @@ import (
 
 // CreateOrder is the resolver for the createOrder field.
 func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrder) (*model.Order, error) {
-
 	orderService := service.NewOrderService(r.db)
 	order, err := orderService.Create(input)
 
@@ -22,22 +20,9 @@ func (r *mutationResolver) CreateOrder(ctx context.Context, input model.NewOrder
 		return nil, err
 	}
 
-	products := []*model.Product{}
-	for _, p := range order.Products {
-
-		productName := p.Name
-		products = append(products, &model.Product{
-			ID:       p.ID,
-			Name:     &productName,
-			Quantity: p.Quantity,
-			Price:    p.Price,
-		})
-	}
-
 	return &model.Order{
 		ID:         order.ID,
 		TotalPrice: order.TotalPrice,
-		Products:   products,
 	}, nil
 }
 
@@ -58,9 +43,49 @@ func (r *mutationResolver) CreateProduct(ctx context.Context, input model.NewPro
 	}, nil
 }
 
+// Products is the resolver for the products field.
+func (r *orderResolver) Products(ctx context.Context, obj *model.Order) ([]*model.Product, error) {
+
+	orderProductService := service.NewOrderProductService(r.db)
+	products, err := orderProductService.FindByOrderId(obj.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	productList := []*model.Product{}
+	for _, product := range products {
+		productList = append(productList, &model.Product{
+			ID: product.ID,
+
+			Name:     &product.Name,
+			Quantity: product.Quantity,
+			Price:    product.Price,
+		})
+	}
+
+	return productList, nil
+}
+
 // Orders is the resolver for the orders field.
 func (r *queryResolver) Orders(ctx context.Context) ([]*model.Order, error) {
-	panic(fmt.Errorf("not implemented: Orders - orders"))
+
+	orderService := service.NewOrderService(r.db)
+	orders, err := orderService.FindAll()
+
+	if err != nil {
+		return nil, err
+	}
+
+	orderList := []*model.Order{}
+	for _, order := range orders {
+		orderList = append(orderList, &model.Order{
+			ID:         order.ID,
+			TotalPrice: order.TotalPrice,
+		})
+	}
+
+	return orderList, nil
 }
 
 // Products is the resolver for the products field.
@@ -91,8 +116,12 @@ func (r *queryResolver) Products(ctx context.Context) ([]*model.Product, error) 
 // Mutation returns MutationResolver implementation.
 func (r *Resolver) Mutation() MutationResolver { return &mutationResolver{r} }
 
+// Order returns OrderResolver implementation.
+func (r *Resolver) Order() OrderResolver { return &orderResolver{r} }
+
 // Query returns QueryResolver implementation.
 func (r *Resolver) Query() QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
+type orderResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
